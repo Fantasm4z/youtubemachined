@@ -15,8 +15,13 @@
   "bugs": {
     "url": "https://github.com/Fantasm4z/youtubemachined/issues"
   },
+  "type": "module",
   "homepage": "https://github.com/Fantasm4z/youtubemachined#readme",
   "dependencies": {
+    "colors": "^1.4.0",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "readline": "^1.3.0",
     "youtube-mp3-downloader": "^0.7.3"
   }
 }

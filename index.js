@@ -2,6 +2,7 @@
 //
 
 import proprietaryVendor from 'youtube-mp3-downloader';
+import cliProgress from 'cli-progress';
 import consoleColor from 'colors';
 import readline from 'readline';
 import * as fs from 'fs';
@@ -11,6 +12,7 @@ import path from 'path';
 //
 
 const listArr = [ ];
+const barArr = [ ];
 var YouTube = new proprietaryVendor ({
     'ffmpegPath': `C:\\ffmpeg\\ffmpeg.exe`, // FFmpeg binary location
     'outputPath': 'C:\\ffmpeg\\Musicas',            // Output file location (default: the home directory)
@@ -68,24 +70,41 @@ const startMachinedDownloader = ( ) => {
     for ( let uri of listArr ) {
 
         if ( getVideoId ( uri ) == null ) return logConsole ( `Error: Fail on read this link: ${ uri }`, 'red' );
+        barArr.push ( uri );
+
+        barArr [ uri ] = new cliProgress.SingleBar({
+            format: 'Baixando |' + consoleColor.cyan('{bar}') + '| {percentage}% || {value}/{total} Chunks || Speed: {speed}',
+            barCompleteChar: '\u2588',
+            barIncompleteChar: '\u2591',
+            hideCursor: true
+        });
 
         YouTube.download ( getVideoId ( uri ) );
+
+        barArr [ uri ].start(100, 0, {
+            speed: "N/A"
+        });
  
         YouTube.on ( 'finished', ( err, data ) => {
 
-            logConsole ( JSON.stringify ( data ), 'blue' );
+            barArr [ uri ].stop ( );
 
         } );
  
         YouTube.on ( 'error', ( error ) => {
+            
+            barArr [ uri ].stop ( );
             
             logConsole ( error, 'red' );
 
         } );
         
         YouTube.on ( 'progress', ( progress ) => {
+
+            barArr [ uri ].increment ( );
+            barArr [ uri ].update ( JSON.parse ( JSON.stringify( progress ) ).progress.percentage );
             
-            logConsole ( JSON.stringify ( progress ), 'green' );
+            //logConsole ( JSON.stringify ( progress ), 'green' );
 
         });
         

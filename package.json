@@ -18,6 +18,7 @@
   "type": "module",
   "homepage": "https://github.com/Fantasm4z/youtubemachined#readme",
   "dependencies": {
+    "cli-progress": "^3.8.2",
     "colors": "^1.4.0",
     "fs": "0.0.1-security",
     "path": "^0.12.7",
